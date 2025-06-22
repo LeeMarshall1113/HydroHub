@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: hydro
+      POSTGRES_PASSWORD: hydro123
+      POSTGRES_DB: hydrohub
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+    volumes:
+      - mosquitto_data:/mosquitto/data
+
+  server:
+    build: ./server
+    environment:
+      - PGUSER=hydro
+      - PGPASSWORD=hydro123
+      - PGDATABASE=hydrohub
+      - PGHOST=postgres
+      - PGPORT=5432
+      - JWT_SECRET=supersecretjwt
+      - MQTT_URL=tcp://mosquitto:1883
+    depends_on:
+      - postgres
+      - mosquitto
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/usr/src/app
+    command: ["bash", "-c", "npm install && npm run dev"]
+
+volumes:
+  pgdata:
+  mosquitto_data:
