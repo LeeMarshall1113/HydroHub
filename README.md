@@ -72,14 +72,6 @@ open http://localhost:3000/client/index.html
 
 ---
 
-## 5. Screenshots 🖼️
-
-<p align="center">
-  <img src="docs/demo-dashboard.png" width="720" alt="HydroHub dashboard" />![23dbfee3-b881-4137-8f57-6e6401971e07](https://github.com/user-attachments/assets/337467b3-ef93-46c1-9b4f-ba4971b93a41)
-
-</p>
-
----
 
 ## 6. Local Dev Tips 💡
 
