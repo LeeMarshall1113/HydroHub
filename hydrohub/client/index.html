@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>HydroHub Dashboard</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:1rem;}
+    #chart{width:100%;height:300px;border:1px solid #aaa;}
+    table{border-collapse:collapse;width:100%;}
+    th,td{border:1px solid #ccc;padding:4px;text-align:center;}
+  </style>
+</head>
+<body>
+  <h1>HydroHub Dashboard</h1>
+  <label>Valve ID:
+    <input id="valveId" type="number" value="1" min="1" />
+  </label>
+  <button id="toggle">Toggle Valve</button>
+  <div id="state">State: unknown</div>
+
+  <h2>Latest Telemetry</h2>
+  <table>
+    <thead><tr><th>Time</th><th>Flow</th><th>Pressure</th></tr></thead>
+    <tbody id="telemetryBody"></tbody>
+  </table>
+
+  <script>
+    const ws = new WebSocket((location.protocol==='https:'?'wss':'ws')+'://'+location.host+'/ws');
+    ws.onmessage = (ev)=>{
+      const data=JSON.parse(ev.data);
+      if(data.type==='telemetry'){
+        const row=document.createElement('tr');
+        row.innerHTML='<td>'+new Date().toLocaleTimeString()+'</td><td>'+data.flow.toFixed(2)+'</td><td>'+data.pressure.toFixed(2)+'</td>';
+        document.getElementById('telemetryBody').prepend(row);
+      }else if(data.type==='state'){
+        if(Number(document.getElementById('valveId').value)===data.valveId){
+          document.getElementById('state').textContent='State: '+(data.state?'OPEN':'CLOSED');
+        }
+      }
+    };
+
+    document.getElementById('toggle').onclick=async()=>{
+      const id=document.getElementById('valveId').value;
+      await fetch('/api/valves/'+id+'/toggle',{method:'POST'});
+    };
+  </script>
+</body>
+</html>
