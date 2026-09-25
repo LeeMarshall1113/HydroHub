@@ -12,8 +12,8 @@ A **miniature, production-style** full-stack demo that mimics a connected water-
 
 ```bash
 # 1 Clone & enter repo
-git clone https://github.com/your-handle/hydrohub.git
-cd hydrohub
+git clone https://github.com/LeeMarshall1113/HydroHub.git
+cd HydroHub
 
 # 2 Spin up services (Postgres, Mosquitto, API)
 docker compose up -d
